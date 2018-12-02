@@ -2,9 +2,6 @@ import urllib.request
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-import logging
-
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s')
 
 
 def download_file(url, filename):
@@ -34,9 +31,6 @@ if __name__ == "__main__":
     tr_list = list(soup.find_all('tr'))
 
     for idx, tr in enumerate(tr_list):
-        if idx < 85:
-            continue
-
         children = list(tr.children)
         download_col = children[-2]
 
