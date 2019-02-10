@@ -1,3 +1,4 @@
+import os.path
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
@@ -44,5 +45,10 @@ if __name__ == "__main__":
         href = download_col.find('a')['href']
         download_url = f'{base_url}{href}'
 
-        print(f'\n({idx}/{len(tr_list) - 1}) {download_url}')
-        download_file(download_url, f'../data/metabolites/{entry_id}.zip')
+        # print(f'\n({idx}/{len(tr_list) - 1}) {download_url} {entry_id}')
+
+        if os.path.isfile(f'../data/metabolites/{entry_id}.zip'):
+            continue
+        else:
+            print(f'{entry_id} not found')
+            download_file(download_url, f'../data/metabolites/{entry_id}.zip')
