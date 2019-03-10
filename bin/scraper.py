@@ -23,6 +23,7 @@ def download_file(url, filename):
 
 
 if __name__ == "__main__":
+    data_dir = '/media/shared/arion_data'
     base_url = 'http://gissmo.nmrfam.wisc.edu'
     library_url = f'{base_url}/library'
 
@@ -45,10 +46,11 @@ if __name__ == "__main__":
         href = download_col.find('a')['href']
         download_url = f'{base_url}{href}'
 
-        # print(f'\n({idx}/{len(tr_list) - 1}) {download_url} {entry_id}')
-
-        if os.path.isfile(f'../data/metabolites/{entry_id}.zip'):
+        if os.path.isfile(f'{data_dir}/raw/{entry_id}.zip') or \
+                os.path.isdir(f'{data_dir}/metabolites/{entry_id[5:]}'):
             continue
         else:
-            print(f'{entry_id} not found')
-            download_file(download_url, f'../data/metabolites/{entry_id}.zip')
+        #     print(f'{entry_id} not found')
+        #     download_file(download_url, f'{data_dir}/raw/{entry_id}.zip')
+
+            print(f'({idx}/{len(tr_list) - 1}) {download_url} {entry_id}')
