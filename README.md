@@ -35,13 +35,13 @@ Open the `notebooks/speaq.R.ipynb` notebook, uncomment the first cell and run!
 
 ## repo description
 
-`arion/`: python package with utils for GISSMO lookups
-`bin/scraper.py`: download files from GISSMO
-`bin/grid_search.py`: run grid search to try to identify metabolites in a specific data set
-`papers`: relevant academic papers
-`notebooks/speaq.R.ipynb`: code provided by speaq developers for demonstration purposes
-`notebooks/arion_speaq.R.ipynb`: speaq library applied to arion data
-`notebooks/correlation_analysis.ipynb`: runs on the outputs of the R notebook to identify metabolites
+- `arion/`: python package with utils for GISSMO lookups
+- `bin/scraper.py`: download files from GISSMO
+- `bin/grid_search.py`: run grid search to try to identify metabolites in a specific data set
+- `papers`: relevant academic papers
+- `notebooks/speaq.R.ipynb`: code provided by speaq developers for demonstration purposes
+- `notebooks/arion_speaq.R.ipynb`: speaq library applied to arion data
+- `notebooks/correlation_analysis.ipynb`: runs on the outputs of the R notebook to identify metabolites
 
 ## Notes:
 
