@@ -3,7 +3,9 @@ from sortedcontainers import SortedList
 import glob
 import pandas as pd
 import networkx as nx
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Colors:
     HEADER = '\033[95m'
@@ -59,7 +61,7 @@ class PeakDB:
     def metabolite_peaks(self) -> Dict[str, List[MetabolitePeak]]:
         return self._metabolite_peaks
 
-    def query_n(self, qu: List[float], tolerance=0.0075):
+    def query_n(self, qu: List[float], tolerance=0.0075, missing_thresh=0.8):
         graphs = {}
         for q in qu:
             lower = MetabolitePeak(None, q - tolerance, None)
@@ -68,6 +70,12 @@ class PeakDB:
             for retrieved_peak in self._peaks.irange(lower, upper):
                 if retrieved_peak.metabolite_id not in graphs:
                     graphs[retrieved_peak.metabolite_id] = nx.Graph()
+
+                if f'l_{q:.5f}' not in graphs[retrieved_peak.metabolite_id]:
+                    graphs[retrieved_peak.metabolite_id].add_node(f'l_{q:.5f}', bipartite=0)
+
+                if retrieved_peak.id not in graphs[retrieved_peak.metabolite_id]:
+                    graphs[retrieved_peak.metabolite_id].add_node(retrieved_peak.id, bipartite=1)
 
                 graphs[retrieved_peak.metabolite_id].add_edge(f'l_{q:.5f}', retrieved_peak.id)
 
@@ -87,7 +95,9 @@ class PeakDB:
             result['missing'] = []
             matched_peaks = [self.peak_dict[peak_id] for peak_id in result['matches'].values()]
             for peak in self.metabolite_peaks[met]:
-                if peak not in matched_peaks and any([peak.amp >= p.amp for p in matched_peaks]):
+                if peak not in matched_peaks and any([p.amp * missing_thresh <= peak.amp for p in matched_peaks]):
+                    # if there is any peak larger than any seen peak
+                    # this peak is considered missing
                     result['missing'].append(peak.id)
 
             result_map.append(result)
@@ -139,5 +149,5 @@ def generate_db(data_dir):
             if peak['Amp'] >= cutoff:
                 peaks.append(MetabolitePeak(metabolite_id, peak['PPM'], peak['Amp']))
 
-    print(f'found {len(peaks)} peaks across {met_idx + 1} metabolites')
+    logger.info(f'found {len(peaks)} peaks across {met_idx + 1} metabolites')
     return PeakDB(peaks)
