@@ -104,6 +104,12 @@ class PeakDB:
 
         return result_map
 
+    def query_peak(self, q, tolerance=0.0075):
+        lower = MetabolitePeak(None, q - tolerance, None)
+        upper = MetabolitePeak(None, q + tolerance, None)
+
+        return self._peaks.irange(lower, upper)
+
     def query(self, qu: List[float], tolerance=0.0075):
         result_map = {}
         for q in qu:
